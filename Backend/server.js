@@ -7,6 +7,8 @@ const destinationRoutes = require('./routes/destinationRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const connectDB = require('./config/db');
 const preferenceRoutes = require('./routes/preferenceRoutes');
+const reviewRoutes = require("./routes/reviewRoutes");
+const itineraryRoutes = require("./routes/itineraryRoutes");
 
 const app = express();
 
@@ -20,7 +22,9 @@ app.get('/' , (req,res)=>{
 app.use('/users', userRoutes);
 app.use('/destinations', destinationRoutes);
 app.use('/auth', authRoutes); 
-app.use("/preferences" , preferenceRoutes)
+app.use("/preferences" , preferenceRoutes);
+app.use("/reviews", reviewRoutes);
+app.use("/itineraries", itineraryRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

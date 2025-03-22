@@ -90,23 +90,30 @@ const getDestinationById = async (req, res) => {
 // ✅ Create a new destination (Admin Only)
 const createDestination = async (req, res) => {
     try {
-        const { name, description, location, images, activities, averageCost, bestTimeToVisit, category } = req.body;
+        const { name, description, location, activities, averageCost, bestTimeToVisit, category } = req.body;
 
-        // Check if the destination already exists
+        // Check if destination already exists
         const existingDestination = await Destination.findOne({ name });
         if (existingDestination) {
             return res.status(400).json({ message: "Destination already exists" });
         }
 
+        // Check if an image was uploaded
+        let imageUrls = [];
+        if (req.files && req.files.length > 0) {
+            imageUrls = req.files.map(file => file.path); // Cloudinary URLs
+        }
+
+        // Create new destination
         const newDestination = new Destination({
             name,
             description,
             location,
-            images,
             activities,
             averageCost,
             bestTimeToVisit,
             category,
+            images: imageUrls,  // Store array of URLs
             createdBy: req.user._id
         });
 
@@ -120,7 +127,14 @@ const createDestination = async (req, res) => {
 // 🔄 Update destination (Admin Only)
 const updateDestination = async (req, res) => {
     try {
-        const updatedDestination = await Destination.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        let updateData = { ...req.body };
+
+        // Check if a new image was uploaded
+        if (req.file) {
+            updateData.images = req.file.path; // Update with new Cloudinary URL
+        }
+
+        const updatedDestination = await Destination.findByIdAndUpdate(req.params.id, updateData, { new: true });
 
         if (!updatedDestination) {
             return res.status(404).json({ message: "Destination not found" });
@@ -131,6 +145,7 @@ const updateDestination = async (req, res) => {
         res.status(500).json({ message: "Server Error", error });
     }
 };
+
 
 // ❌ Delete destination (Admin Only)
 const deleteDestination = async (req, res) => {
