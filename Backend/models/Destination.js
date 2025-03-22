@@ -1,14 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const DestinationSchema = new mongoose.Schema({
+const destinationSchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
     description: { type: String, required: true },
     location: { type: String, required: true },
-    images: [{ type: String }],
-    activities: [{ type: String }],
+    images: { type: [String], required: true }, // Storing Cloudinary URL
+    activities: [String],
     averageCost: { type: Number, required: true },
-    bestTimeToVisit: { type: String, required: true },
+    bestTimeToVisit: String,
+    category: { type: String, required: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Destination', DestinationSchema);
+const Destination = mongoose.model("Destination", destinationSchema);
+module.exports = Destination;
