@@ -3,7 +3,7 @@ import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 
 const DestinationForm = () => {
-  const { user } = useAuth()
+  const { user } = useAuth();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -15,7 +15,11 @@ const DestinationForm = () => {
   const [preview, setPreview] = useState([]);
 
   if (!user || user.role !== "admin") {
-    return <h2>Access Denied. Only admins can add destinations.</h2>;
+    return (
+      <div className="flex items-center justify-center h-64 bg-red-50 rounded-lg border border-red-200 p-6">
+        <h2 className="text-xl font-semibold text-red-600">Access Denied. Only admins can add destinations.</h2>
+      </div>
+    );
   }
 
   const handleImageChange = (e) => {
@@ -26,7 +30,7 @@ const DestinationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token"); // Get auth token
+    const token = localStorage.getItem("token");
 
     const formData = new FormData();
     formData.append("name", name);
@@ -42,7 +46,7 @@ const DestinationForm = () => {
       const response = await axios.post("http://localhost:5000/destinations/create", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // Sending the token
+          Authorization: `Bearer ${token}`,
         },
       });
       alert("Destination added successfully!");
@@ -53,19 +57,153 @@ const DestinationForm = () => {
   };
 
   return (
-    <div>
-      <h2>Add New Destination</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
-        <input type="text" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} required />
-        <input type="text" placeholder="Activities" value={activities} onChange={(e) => setActivities(e.target.value)} required />
-        <input type="number" placeholder="Average Cost" value={averageCost} onChange={(e) => setAverageCost(e.target.value)} required />
-        <input type="text" placeholder="Best Time to Visit" value={bestTimeToVisit} onChange={(e) => setBestTimeToVisit(e.target.value)} required />
-        <input type="text" placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value)} required />
-        <input type="file" multiple onChange={handleImageChange} required />
-        <div>{preview.map((src, index) => <img key={index} src={src} alt="preview" width={100} />)}</div>
-        <button type="submit">Submit</button>
+    <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-8 my-8">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Destination</h2>
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+            Destination Name
+          </label>
+          <input 
+            id="name"
+            type="text" 
+            placeholder="e.g. Eiffel Tower" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)} 
+            required 
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            Description
+          </label>
+          <textarea 
+            id="description"
+            placeholder="Provide a detailed description of this destination..." 
+            value={description} 
+            onChange={(e) => setDescription(e.target.value)} 
+            required 
+            rows={4}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+              Location
+            </label>
+            <input 
+              id="location"
+              type="text" 
+              placeholder="e.g. Paris, France" 
+              value={location} 
+              onChange={(e) => setLocation(e.target.value)} 
+              required 
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+              Category
+            </label>
+            <input 
+              id="category"
+              type="text" 
+              placeholder="e.g. Landmark, Beach, Mountain" 
+              value={category} 
+              onChange={(e) => setCategory(e.target.value)} 
+              required 
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+        
+        <div>
+          <label htmlFor="activities" className="block text-sm font-medium text-gray-700 mb-1">
+            Activities
+          </label>
+          <input 
+            id="activities"
+            type="text" 
+            placeholder="e.g. Sightseeing, Swimming, Hiking" 
+            value={activities} 
+            onChange={(e) => setActivities(e.target.value)} 
+            required 
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="averageCost" className="block text-sm font-medium text-gray-700 mb-1">
+              Average Cost ($)
+            </label>
+            <input 
+              id="averageCost"
+              type="number" 
+              placeholder="e.g. 500" 
+              value={averageCost} 
+              onChange={(e) => setAverageCost(e.target.value)} 
+              required 
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="bestTimeToVisit" className="block text-sm font-medium text-gray-700 mb-1">
+              Best Time to Visit
+            </label>
+            <input 
+              id="bestTimeToVisit"
+              type="text" 
+              placeholder="e.g. Summer, June-August" 
+              value={bestTimeToVisit} 
+              onChange={(e) => setBestTimeToVisit(e.target.value)} 
+              required 
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+        
+        <div>
+          <label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-1">
+            Images
+          </label>
+          <input 
+            id="images"
+            type="file" 
+            multiple 
+            onChange={handleImageChange} 
+            required 
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          />
+          
+          {preview.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {preview.map((src, index) => (
+                <div key={index} className="relative">
+                  <img 
+                    src={src} 
+                    alt={`Preview ${index + 1}`} 
+                    className="h-24 w-24 object-cover rounded-md border border-gray-200"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        
+        <button 
+          type="submit"
+          className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          Add Destination
+        </button>
       </form>
     </div>
   );
