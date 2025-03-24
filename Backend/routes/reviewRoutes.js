@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { addReview, getReviews } = require("../controllers/reviewController");
-const { isAuthenticated } = require("../middlewares/authMiddleware");
+const { addReview, getReviews, getAllReviews, deleteReview } = require("../controllers/reviewController");
+const { isAuthenticated, isAdmin } = require("../middlewares/authMiddleware");
 // console.log("addReview:", addReview);
 // console.log("Type of addReview:", typeof addReview);
 
@@ -12,6 +12,8 @@ const { isAuthenticated } = require("../middlewares/authMiddleware");
 
 // Define review routes
 router.post("/add",isAuthenticated ,addReview);
-router.get("/", getReviews);
+router.get("/:destinationId", getReviews);
+router.get("/admin/all", isAuthenticated, isAdmin, getAllReviews);
+router.delete("/delete/:reviewId", isAuthenticated, isAdmin, deleteReview);
 
 module.exports = router;

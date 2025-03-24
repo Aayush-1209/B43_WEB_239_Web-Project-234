@@ -31,4 +31,24 @@ const getReviews = async (req, res) => {
     }
 };
 
-module.exports = { addReview, getReviews };
+const deleteReview = async (req, res) => {
+    try {
+        const { reviewId } = req.params;
+        await Review.findByIdAndDelete(reviewId);
+        res.status(200).json({ message: "Review deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting review:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+const getAllReviews = async (req, res) => {
+    try {
+        const reviews = await Review.find().populate("userId", "name").populate("destinationId", "name");
+        res.status(200).json(reviews);
+    } catch (error) {
+        console.error("Error fetching all reviews:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+module.exports = { addReview, getReviews, getAllReviews, deleteReview };

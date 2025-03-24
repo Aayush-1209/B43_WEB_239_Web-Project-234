@@ -6,13 +6,25 @@ const userRoutes = require('./routes/userRoutes');
 const destinationRoutes = require('./routes/destinationRoutes');
 const authRoutes = require('./routes/authRoutes'); 
 const connectDB = require('./config/db');
-const preferenceRoutes = require('./routes/preferenceRoutes');
 const reviewRoutes = require("./routes/reviewRoutes");
 const itineraryRoutes = require("./routes/itineraryRoutes");
 
 const app = express();
+const allowedOrigins = [
+    "http://localhost:5173", // Local dev
+    "https://your-production-site.com" // Add your deployed frontend URL
+];
 
-app.use(cors());
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
+}));
 app.use(express.json());
 
 app.get('/' , (req,res)=>{
@@ -22,7 +34,6 @@ app.get('/' , (req,res)=>{
 app.use('/users', userRoutes);
 app.use('/destinations', destinationRoutes);
 app.use('/auth', authRoutes); 
-app.use("/preferences" , preferenceRoutes);
 app.use("/reviews", reviewRoutes);
 app.use("/itineraries", itineraryRoutes);
 
