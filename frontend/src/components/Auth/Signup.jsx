@@ -10,7 +10,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/auth/signup", { name, email, password, role });
+      const response = await axios.post("https://tripsage.onrender.com/auth/signup", { name, email, password, role });
       alert("Signup successful! Please login.");
     } catch (error) {
       console.error("Signup failed:", error);

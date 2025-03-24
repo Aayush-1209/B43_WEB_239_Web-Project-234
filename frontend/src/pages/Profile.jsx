@@ -24,7 +24,7 @@ const Profile = () => {
 
         // ✅ Fetch user preferences
         const prefResponse = await axios.get(
-          "http://localhost:5000/users/preferences",
+          "https://tripsage.onrender.com/users/preferences",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -34,7 +34,7 @@ const Profile = () => {
 
         // ✅ Fetch user itineraries
         const itineraryResponse = await axios.get(
-          "http://localhost:5000/itineraries/user",
+          "https://tripsage.onrender.com/itineraries/user",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -62,7 +62,7 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete("http://localhost:5000/users/preferences", {
+      await axios.delete("https://tripsage.onrender.com/users/preferences", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -84,7 +84,7 @@ const Profile = () => {
       return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/itineraries/delete/${id}`, {
+      await axios.delete(`https://tripsage.onrender.com/itineraries/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setItineraries(itineraries.filter((itinerary) => itinerary._id !== id));

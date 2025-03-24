@@ -14,7 +14,7 @@ const AdminReviews = () => {
       try {
         setIsLoading(true);
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5000/reviews/admin/all", {
+        const response = await axios.get("https://tripsage.onrender.com/reviews/admin/all", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setReviews(response.data);
@@ -32,7 +32,7 @@ const AdminReviews = () => {
   const handleDelete = async (reviewId) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/reviews/delete/${reviewId}`, {
+      await axios.delete(`https://tripsage.onrender.com/reviews/delete/${reviewId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setReviews(reviews.filter((review) => review._id !== reviewId));

@@ -22,7 +22,7 @@ const DestinationList = () => {
                     return;
                 }
 
-                const response = await axios.get("http://localhost:5000/destinations/get", {
+                const response = await axios.get("https://tripsage.onrender.com/destinations/get", {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     },

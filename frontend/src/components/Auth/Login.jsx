@@ -10,7 +10,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", { email, password });
+      const response = await axios.post("https://tripsage.onrender.com/auth/login", { email, password });
       const { token, user } = response.data;
 
       localStorage.setItem("token", token);

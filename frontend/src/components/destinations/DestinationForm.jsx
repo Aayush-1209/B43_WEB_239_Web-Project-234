@@ -43,7 +43,7 @@ const DestinationForm = () => {
     images.forEach((image) => formData.append("images", image));
 
     try {
-      const response = await axios.post("http://localhost:5000/destinations/create", formData, {
+      const response = await axios.post("https://tripsage.onrender.com/destinations/create", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

@@ -41,7 +41,7 @@ const PreferencesForm = () => {
                 return;
             }
 
-            await axios.put("http://localhost:5000/users/preferences", preferences, {
+            await axios.put("https://tripsage.onrender.com/users/preferences", preferences, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

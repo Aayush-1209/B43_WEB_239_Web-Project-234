@@ -8,7 +8,7 @@ const Reviews = ({ destinationId }) => {
 
   const fetchReviews = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/reviews/${destinationId}`);
+      const response = await axios.get(`https://tripsage.onrender.com/reviews/${destinationId}`);
       setReviews(response.data);
       setLoading(false);
     } catch (error) {

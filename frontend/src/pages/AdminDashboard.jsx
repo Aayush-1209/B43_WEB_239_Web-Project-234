@@ -22,7 +22,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:5000/destinations/get",
+        "https://tripsage.onrender.com/destinations/get",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -38,7 +38,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:5000/reviews/admin/all",
+        "https://tripsage.onrender.com/reviews/admin/all",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -55,7 +55,7 @@ const AdminDashboard = () => {
       return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/destinations/delete/${id}`, {
+      await axios.delete(`https://tripsage.onrender.com/destinations/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDestinations(destinations.filter((dest) => dest._id !== id));
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
       return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/destinations/delete/${id}`, {
+      await axios.delete(`https://tripsage.onrender.com/destinations/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDestinations(destinations.filter((dest) => dest._id !== id));
@@ -82,7 +82,7 @@ const AdminDashboard = () => {
     if (!window.confirm("Are you sure you want to delete this review?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/reviews/delete/${reviewId}`, {
+      await axios.delete(`https://tripsage.onrender.com/reviews/delete/${reviewId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setReviews(reviews.filter((review) => review._id !== reviewId));

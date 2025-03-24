@@ -18,7 +18,7 @@ const ReviewForm = ({ destinationId, onReviewAdded }) => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5000/reviews/add",
+        "https://tripsage.onrender.com/reviews/add",
         { destinationId, rating, comment },
         { headers: { Authorization: `Bearer ${token}` } }
       );

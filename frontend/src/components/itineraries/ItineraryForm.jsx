@@ -37,7 +37,7 @@ const ItineraryForm = ({ destinationId, onClose }) => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5000/itineraries/add",
+        "https://tripsage.onrender.com/itineraries/add",
         { destinationId, title, description, date, activities },
         { headers: { Authorization: `Bearer ${token}` } }
       );

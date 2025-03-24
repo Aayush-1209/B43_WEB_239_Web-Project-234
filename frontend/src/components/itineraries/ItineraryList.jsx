@@ -22,7 +22,7 @@ const ItineraryList = ({ destinationId }) => {
       try {
         console.log(`📌 Fetching itineraries for destinationId: ${destinationId}`);
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/itineraries/${destinationId}`);
+        const response = await axios.get(`https://tripsage.onrender.com/itineraries/${destinationId}`);
         console.log("✅ API Response:", response.data);
         setItineraries(response.data);
         setLoading(false);
@@ -40,7 +40,7 @@ const ItineraryList = ({ destinationId }) => {
   const handleDelete = async (itineraryId) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/itineraries/delete/${itineraryId}`, {
+      await axios.delete(`https://tripsage.onrender.com/itineraries/delete/${itineraryId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -68,7 +68,7 @@ const ItineraryList = ({ destinationId }) => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        `http://localhost:5000/itineraries/update/${itineraryId}`,
+        `https://tripsage.onrender.com/itineraries/update/${itineraryId}`,
         { title, activities: activities.split(",").map(item => item.trim()), date },
         {
           headers: { Authorization: `Bearer ${token}` },

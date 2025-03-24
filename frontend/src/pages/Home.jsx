@@ -11,7 +11,7 @@ const Home = () => {
     const fetchPopularDestinations = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/destinations/popular");
+        const response = await axios.get("https://tripsage.onrender.com/destinations/popular");
         setPopularDestinations(response.data);
         setLoading(false);
       } catch (error) {

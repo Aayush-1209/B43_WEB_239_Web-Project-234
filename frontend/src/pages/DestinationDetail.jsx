@@ -14,7 +14,7 @@ const DestinationDetail = () => {
   useEffect(() => {
     const fetchDestination = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/destinations/get/${id}`);
+        const response = await axios.get(`https://tripsage.onrender.com/destinations/get/${id}`);
         setDestination(response.data);
         setLoading(false);
       } catch (error) {
