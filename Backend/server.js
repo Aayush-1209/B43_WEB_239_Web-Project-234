@@ -14,7 +14,7 @@ const itineraryRoutes = require("./routes/itineraryRoutes");
 
 const allowedOrigins = [
     "http://localhost:5173", // Local dev
-    "https://tripsage.netlify.app/" // Add your deployed frontend URL
+    "https://tripsage.netlify.app" // Add your deployed frontend URL
 ];
 
 app.use(cors({
