@@ -6,7 +6,7 @@ const { upload } = require("../config/cloudinary"); // Import Cloudinary Multer 
 const router = express.Router();
 
 
-router.get('/get', getDestinations); 
+router.get('/get',isAuthenticated, getDestinations); 
 router.get('/get/:id', getDestinationById); 
 router.post('/create', isAuthenticated, isAdmin, upload.array("images", 5), createDestination);
 router.put('/update/:id', isAuthenticated, isAdmin, upload.single("image"), updateDestination); 

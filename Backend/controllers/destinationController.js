@@ -1,12 +1,15 @@
-const Destination = require('../models/Destination');
-
 // 🔍 Get all destinations with Filtering & Pagination
+const Destination = require("../models/Destination");
+const User = require("../models/User"); // Import User model
+
 const getDestinations = async (req, res) => {
+    console.log("Received Query Params:", req.query);
+
     try {
-        const { search, category, location, minCost, maxCost, page = 1, limit = 10 } = req.query;
+        const { search, category, location, minCost, maxCost, sort, page = 1, limit = 10 } = req.query;
         let query = {};
 
-        // General Filters
+        // ✅ **General Filters**
         if (search) {
             query.name = { $regex: search, $options: "i" };
         }
@@ -17,62 +20,75 @@ const getDestinations = async (req, res) => {
             query.location = { $regex: location, $options: "i" };
         }
         if (minCost && maxCost) {
-            query.averageCost = { $gte: minCost, $lte: maxCost };
+            query.averageCost = { $gte: parseInt(minCost), $lte: parseInt(maxCost) };
         }
 
-        // Personalized Filtering (For Logged-in Users)
-        let sortOption = { ratings: -1 }; // Default sort (highest rated)
-        if (req.user && req.user.preferences) {
-            const { activities, location, budget } = req.user.preferences;
+        // ✅ **Fetch User Preferences from User Model**
+        let userPreferences = {};
+        if (req.user) {
+            const user = await User.findById(req.user._id).select("preferences");
 
-            let preferenceQuery = [];
-            if (activities?.length > 0) {
-                preferenceQuery.push({ activities: { $in: activities } });
+            if (user && user.preferences) {
+                userPreferences = {
+                    category: user.preferences.category,
+                    location: user.preferences.location,
+                    budget: user.preferences.budget,
+                    activities: user.preferences.activities || [],
+                };
             }
-            if (location) {
-                preferenceQuery.push({ location: { $regex: location, $options: "i" } });
-            }
-            if (budget > 0) {
-                preferenceQuery.push({ averageCost: { $lte: budget } });
-            }
-
-            if (preferenceQuery.length > 0) {
-                query.$and = preferenceQuery; // Must match multiple preferences
-            }
-
-            // Custom Sorting: Prioritize destinations that match preferences
-            sortOption = {
-                matchesPreferences: -1, // This will be calculated dynamically
-                ratings: -1, // Then sort by highest rated
-            };
         }
 
-        // Fetch Destinations
-        const destinations = await Destination.aggregate([
-            { $match: query },
-            {
-                $addFields: {
-                    matchesPreferences: {
-                        $size: {
-                            $setIntersection: ["$activities", req.user?.preferences?.activities || []],
-                        },
-                    },
-                },
-            },
-            { $sort: sortOption },
-            { $skip: (page - 1) * (parseInt(limit, 10) || 10) },
-            { $limit: parseInt(limit, 10) || 10 },
-        ]);
+        // ✅ **Apply User Preferences if Available**
+        let preferenceQuery = [];
+        if (userPreferences.category) {
+            preferenceQuery.push({ category: userPreferences.category });
+        }
+        if (userPreferences.location) {
+            preferenceQuery.push({ location: { $regex: userPreferences.location, $options: "i" } });
+        }
+        if (userPreferences.activities.length > 0) {
+            preferenceQuery.push({ activities: { $in: userPreferences.activities } });
+        }
+        if (userPreferences.budget > 0) {
+            preferenceQuery.push({ averageCost: { $lte: userPreferences.budget } });
+        }
 
-        // Count total documents matching the query
+        // If preferences exist, merge them into the main query
+        if (preferenceQuery.length > 0) {
+            query.$and = preferenceQuery;
+        }
+
+        console.log("Final Query:", JSON.stringify(query, null, 2));
+
+        // ✅ **Sorting Logic**
+        let sortOption = { ratings: -1 }; // Default: highest-rated first
+        if (sort) {
+            if (sort === "price_asc") {
+                sortOption = { averageCost: 1 }; // Low to High
+            } else if (sort === "price_desc") {
+                sortOption = { averageCost: -1 }; // High to Low
+            }
+        }
+
+        console.log("Sorting applied:", sortOption);
+
+        // ✅ **Fetch Destinations**
+        const destinations = await Destination.find(query)
+            .sort(sortOption)
+            .skip((page - 1) * (parseInt(limit, 10) || 10))
+            .limit(parseInt(limit, 10) || 10);
+
+        // ✅ **Count total documents matching the query**
         const total = await Destination.countDocuments(query);
 
         res.status(200).json({ total, page, destinations });
     } catch (error) {
+        console.error("Error fetching destinations:", error);
         res.status(500).json({ message: "Server Error", error });
     }
 };
 
+module.exports = { getDestinations };
 
 
 // 🔍 Get a single destination by ID
