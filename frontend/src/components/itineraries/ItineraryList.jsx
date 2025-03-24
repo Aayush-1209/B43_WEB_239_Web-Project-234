@@ -10,18 +10,24 @@ const ItineraryList = ({ destinationId }) => {
 
   useEffect(() => {
     const fetchItineraries = async () => {
-      if (!destinationId) return;
-
+      if (!destinationId) {
+        console.error("🚨 No destinationId provided.");
+        return;
+      }
+  
       try {
+        console.log(`📌 Fetching itineraries for destinationId: ${destinationId}`);
         const response = await axios.get(`http://localhost:5000/itineraries/${destinationId}`);
+        console.log("✅ API Response:", response.data);
         setItineraries(response.data);
       } catch (error) {
-        console.error("Error fetching itineraries:", error.response?.data || error);
+        console.error("❌ Error fetching itineraries:", error.response?.data || error);
       }
     };
-
+  
     fetchItineraries();
   }, [destinationId]);
+  
 
   // DELETE ITINERARY FUNCTION
   const handleDelete = async (itineraryId) => {

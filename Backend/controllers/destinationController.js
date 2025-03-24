@@ -177,8 +177,22 @@ const deleteDestination = async (req, res) => {
         res.status(500).json({ message: "Server Error", error });
     }
 };
+const getPopularDestinations = async (req, res) => {
+    try {
+        // ✅ Fetch 6 top-rated destinations
+        const popularDestinations = await Destination.find()
+            .sort({ ratings: -1 }) // Sort by highest rating
+            .limit(6); // Limit to 6 results
+
+        res.status(200).json(popularDestinations);
+    } catch (error) {
+        console.error("Error fetching popular destinations:", error);
+        res.status(500).json({ message: "Server Error", error });
+    }
+};
 
 module.exports = {
+    getPopularDestinations,
     getDestinations,
     getDestinationById,
     createDestination,

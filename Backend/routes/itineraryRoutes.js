@@ -13,10 +13,16 @@ const { isAuthenticated } = require("../middlewares/authMiddleware");
 
 // Define itinerary routes
 router.post("/add", isAuthenticated, addItinerary);
-router.get("/:destinationId", getItineraries);
-router.put("/update/:itineraryId", isAuthenticated, updateItinerary);
-router.delete("/delete/:itineraryId", isAuthenticated, deleteItinerary);
+
 router.get("/user", isAuthenticated, getUserItineraries);
+
+router.get("/:destinationId", getItineraries);
+
+router.put("/update/:itineraryId", isAuthenticated, updateItinerary);
+
+router.delete("/delete/:itineraryId", isAuthenticated, deleteItinerary);
+
+
 
 
 module.exports = router;

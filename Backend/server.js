@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
+const app = express();
+
 const userRoutes = require('./routes/userRoutes');
 const destinationRoutes = require('./routes/destinationRoutes');
 const authRoutes = require('./routes/authRoutes'); 
@@ -9,7 +11,7 @@ const connectDB = require('./config/db');
 const reviewRoutes = require("./routes/reviewRoutes");
 const itineraryRoutes = require("./routes/itineraryRoutes");
 
-const app = express();
+
 const allowedOrigins = [
     "http://localhost:5173", // Local dev
     "https://your-production-site.com" // Add your deployed frontend URL

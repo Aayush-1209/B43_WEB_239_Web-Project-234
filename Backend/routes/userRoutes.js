@@ -11,7 +11,8 @@ router.post("/signup", signup);
 router.post("/login", login);
 
 router.get("/preferences", isAuthenticated, getUserPreferences);
-router.put("/preferences", isAuthenticated, updateUserPreferences);
 router.delete("/preferences", isAuthenticated, deleteUserPreferences);
+router.put("/preferences", isAuthenticated, updateUserPreferences);
+
 
 module.exports = router;

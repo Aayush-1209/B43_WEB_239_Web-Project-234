@@ -23,7 +23,13 @@ const addReview = async (req, res) => {
 // Get all reviews
 const getReviews = async (req, res) => {
     try {
-        const reviews = await Review.find();
+        const { destinationId } = req.params;
+
+        if (!destinationId) {
+            return res.status(400).json({ message: "Destination ID is required" });
+        }
+
+        const reviews = await Review.find({ destinationId }).populate("userId", "name"); // Populate user name
         res.status(200).json(reviews);
     } catch (error) {
         console.error("Error fetching reviews:", error);
