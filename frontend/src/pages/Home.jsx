@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DestinationCard from "../components/destinations/DestinationCard";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [popularDestinations, setPopularDestinations] = useState([]);
