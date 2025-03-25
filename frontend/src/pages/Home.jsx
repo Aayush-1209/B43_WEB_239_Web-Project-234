@@ -170,20 +170,20 @@ const Home = () => {
           </h2>
           <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
             <div className="inline-flex rounded-md shadow">
-              <a
-                href="/destinations"
+              <Link
+                to="/destinations"
                 className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50"
               >
                 Browse Destinations
-              </a>
+              </Link>
             </div>
             <div className="ml-3 inline-flex rounded-md shadow">
-              <a
-                href="/signup"
+              <Link
+                to="/signup"
                 className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
                 Sign Up
-              </a>
+              </Link>
             </div>
           </div>
         </div>
