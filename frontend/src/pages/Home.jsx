@@ -41,12 +41,12 @@ const Home = () => {
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
-                    <a
-                      href="/destinations"
+                    <Link
+                      to="/destinations"
                       className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50 md:py-4 md:text-lg md:px-10"
                     >
                       Explore All Destinations
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
