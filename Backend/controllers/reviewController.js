@@ -1,9 +1,9 @@
-const Review = require("../models/reviewModel"); // Ensure model is properly imported
+const Review = require("../models/reviewModel");
 
-// Add a review
+
 const addReview = async (req, res) => {
     try {
-        const userId = req.user._id; // Extract user ID from req.user
+        const userId = req.user._id; 
         const { destinationId, rating, comment } = req.body;
 
         if (!destinationId || !rating || !comment) {

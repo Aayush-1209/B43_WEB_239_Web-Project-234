@@ -1,6 +1,5 @@
 const User = require("../models/User");
 
-// ✅ Update User Preferences
 const updateUserPreferences = async (req, res) => {
     try {
         const { category, location, budget, activities } = req.body;
@@ -21,13 +20,11 @@ const updateUserPreferences = async (req, res) => {
     }
 };
 
-// ✅ Delete User Preferences
 const deleteUserPreferences = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        // Reset preferences
         user.preferences = { category: "", location: "", budget: 0, activities: [] };
         await user.save();
 
@@ -37,7 +34,6 @@ const deleteUserPreferences = async (req, res) => {
     }
 };
 
-// ✅ Get User Preferences
 const getUserPreferences = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);

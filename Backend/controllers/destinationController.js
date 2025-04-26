@@ -1,15 +1,15 @@
-// 🔍 Get all destinations with Filtering & Pagination
+
 const Destination = require("../models/Destination");
-const User = require("../models/User"); // Import User model
+const User = require("../models/User"); 
 
 const getDestinations = async (req, res) => {
     console.log("Received Query Params:", req.query);
 
     try {
-        const { search, category, location, minCost, maxCost, sort, page = 1, limit = 10 } = req.query;
+        const { search, category, location, minCost, maxCost, sort, page = 1, limit = 20 } = req.query;
         let query = {};
 
-        // ✅ **General Filters**
+       
         if (search) {
             query.name = { $regex: search, $options: "i" };
         }
@@ -23,7 +23,7 @@ const getDestinations = async (req, res) => {
             query.averageCost = { $gte: parseInt(minCost), $lte: parseInt(maxCost) };
         }
 
-        // ✅ **Fetch User Preferences from User Model**
+    
         let userPreferences = {};
         if (req.user) {
             const user = await User.findById(req.user._id).select("preferences");
@@ -38,7 +38,7 @@ const getDestinations = async (req, res) => {
             }
         }
 
-        // ✅ **Apply User Preferences if Available**
+   
         let preferenceQuery = [];
         if (userPreferences.category) {
             preferenceQuery.push({ category: userPreferences.category });
@@ -53,32 +53,32 @@ const getDestinations = async (req, res) => {
             preferenceQuery.push({ averageCost: { $lte: userPreferences.budget } });
         }
 
-        // If preferences exist, merge them into the main query
+    
         if (preferenceQuery.length > 0) {
             query.$and = preferenceQuery;
         }
 
         console.log("Final Query:", JSON.stringify(query, null, 2));
 
-        // ✅ **Sorting Logic**
-        let sortOption = { ratings: -1 }; // Default: highest-rated first
+       
+        let sortOption = { ratings: -1 }; 
         if (sort) {
             if (sort === "price_asc") {
-                sortOption = { averageCost: 1 }; // Low to High
+                sortOption = { averageCost: 1 }; 
             } else if (sort === "price_desc") {
-                sortOption = { averageCost: -1 }; // High to Low
+                sortOption = { averageCost: -1 }; 
             }
         }
 
         console.log("Sorting applied:", sortOption);
 
-        // ✅ **Fetch Destinations**
+       
         const destinations = await Destination.find(query)
             .sort(sortOption)
             .skip((page - 1) * (parseInt(limit, 10) || 10))
             .limit(parseInt(limit, 10) || 10);
 
-        // ✅ **Count total documents matching the query**
+       
         const total = await Destination.countDocuments(query);
 
         res.status(200).json({ total, page, destinations });
@@ -91,7 +91,7 @@ const getDestinations = async (req, res) => {
 module.exports = { getDestinations };
 
 
-// 🔍 Get a single destination by ID
+
 const getDestinationById = async (req, res) => {
     try {
         const destination = await Destination.findById(req.params.id);
@@ -103,24 +103,24 @@ const getDestinationById = async (req, res) => {
     }
 };
 
-// ✅ Create a new destination (Admin Only)
+
 const createDestination = async (req, res) => {
     try {
         const { name, description, location, activities, averageCost, bestTimeToVisit, category } = req.body;
 
-        // Check if destination already exists
+   
         const existingDestination = await Destination.findOne({ name });
         if (existingDestination) {
             return res.status(400).json({ message: "Destination already exists" });
         }
 
-        // Check if an image was uploaded
+       
         let imageUrls = [];
         if (req.files && req.files.length > 0) {
-            imageUrls = req.files.map(file => file.path); // Cloudinary URLs
+            imageUrls = req.files.map(file => file.path); 
         }
 
-        // Create new destination
+      
         const newDestination = new Destination({
             name,
             description,
@@ -129,7 +129,7 @@ const createDestination = async (req, res) => {
             averageCost,
             bestTimeToVisit,
             category,
-            images: imageUrls,  // Store array of URLs
+            images: imageUrls, 
             createdBy: req.user._id
         });
 
@@ -140,14 +140,14 @@ const createDestination = async (req, res) => {
     }
 };
 
-// 🔄 Update destination (Admin Only)
+
 const updateDestination = async (req, res) => {
     try {
         let updateData = { ...req.body };
 
-        // Check if a new image was uploaded
+       
         if (req.file) {
-            updateData.images = req.file.path; // Update with new Cloudinary URL
+            updateData.images = req.file.path; 
         }
 
         const updatedDestination = await Destination.findByIdAndUpdate(req.params.id, updateData, { new: true });
@@ -163,7 +163,7 @@ const updateDestination = async (req, res) => {
 };
 
 
-// ❌ Delete destination (Admin Only)
+
 const deleteDestination = async (req, res) => {
     try {
         const deletedDestination = await Destination.findByIdAndDelete(req.params.id);
@@ -179,10 +179,10 @@ const deleteDestination = async (req, res) => {
 };
 const getPopularDestinations = async (req, res) => {
     try {
-        // ✅ Fetch 6 top-rated destinations
+       
         const popularDestinations = await Destination.find()
-            .sort({ ratings: -1 }) // Sort by highest rating
-            .limit(6); // Limit to 6 results
+            .sort({ ratings: -1 }) 
+            .limit(6); 
 
         res.status(200).json(popularDestinations);
     } catch (error) {

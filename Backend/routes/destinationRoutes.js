@@ -1,8 +1,7 @@
 const express = require('express');
 const { isAuthenticated, isAdmin } = require('../middlewares/authMiddleware');
 const { getPopularDestinations,getDestinations, getDestinationById, createDestination, updateDestination, deleteDestination } = require('../controllers/destinationController');
-const { upload } = require("../config/cloudinary"); // Import Cloudinary Multer Middleware
-
+const { upload } = require("../config/cloudinary"); 
 const router = express.Router();
 
 
