@@ -11,13 +11,15 @@ const AdminDashboard = () => {
   const [destinations, setDestinations] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [activeTab, setActiveTab] = useState("destinations");
+  const [selectedDestination, setSelectedDestination] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     fetchDestinations();
     fetchReviews();
   }, []);
 
-  // Fetch All Destinations
+  // fetching All Destinations
   const fetchDestinations = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -33,7 +35,7 @@ const AdminDashboard = () => {
     }
   };
 
-  // Fetch All Reviews
+  // fetch All Reviews
   const fetchReviews = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -63,21 +65,22 @@ const AdminDashboard = () => {
       console.error("Error deleting destination:", error);
     }
   };
-  const handleUpdateDestination = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this destination?"))
-      return;
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`https://tripsage.onrender.com/destinations/delete/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setDestinations(destinations.filter((dest) => dest._id !== id));
-    } catch (error) {
-      console.error("Error deleting destination:", error);
-    }
+  
+  
+  const handleUpdateDestination = (destination) => {
+    setSelectedDestination(destination);
+    setIsEditing(true);
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Delete Review
+ 
+  const handleCancelEdit = () => {
+    setSelectedDestination(null);
+    setIsEditing(false);
+  };
+
+  
   const handleDeleteReview = async (reviewId) => {
     if (!window.confirm("Are you sure you want to delete this review?")) return;
     try {
@@ -135,11 +138,15 @@ const AdminDashboard = () => {
           <div className="bg-white shadow rounded-lg mb-8">
             <div className="px-6 py-5 border-b border-gray-200">
               <h2 className="text-lg font-medium text-gray-900">
-                Add New Destination
+                {isEditing ? "Edit Destination" : "Add New Destination"}
               </h2>
             </div>
             <div className="px-6 py-5">
-              <DestinationForm onDestinationAdded={fetchDestinations} />
+              <DestinationForm 
+                onDestinationAdded={fetchDestinations} 
+                destinationToEdit={selectedDestination}
+                onEditComplete={handleCancelEdit}
+              />
             </div>
           </div>
 
@@ -167,6 +174,18 @@ const AdminDashboard = () => {
                         </th>
                         <th
                           scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Location
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          Category
+                        </th>
+                        <th
+                          scope="col"
                           className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                         >
                           Actions
@@ -179,12 +198,17 @@ const AdminDashboard = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {dest.name}
                           </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {dest.location}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {dest.category}
+                          </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <button
-                              onClick={() => handleUpdateDestination(dest._id)}
-                              className="text-green-600 hover:text-green-900"
+                              onClick={() => handleUpdateDestination(dest)}
+                              className="text-indigo-600 hover:text-indigo-900 mr-4"
                             >
-                              {" "}
                               Edit
                             </button>
                             <button
@@ -193,7 +217,6 @@ const AdminDashboard = () => {
                             >
                               Delete
                             </button>
-
                           </td>
                         </tr>
                       ))}

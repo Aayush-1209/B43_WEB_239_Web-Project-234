@@ -16,23 +16,23 @@ const Profile = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          console.error("🚨 No token found, user might not be logged in.");
+          console.error(" No token found, user might not be logged in.");
           setError("Authentication error. Please log in again.");
           setLoading(false);
           return;
         }
 
-        // ✅ Fetch user preferences
+        //  Fetch user preferences
         const prefResponse = await axios.get(
           "https://tripsage.onrender.com/users/preferences",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log("📌 Preferences API Response:", prefResponse.data);
+        console.log(" Preferences API Response:", prefResponse.data);
         setPreferences(prefResponse.data);
 
-        // ✅ Fetch user itineraries
+        //  Fetch user itineraries
         const itineraryResponse = await axios.get(
           "https://tripsage.onrender.com/itineraries/user",
           {
@@ -40,12 +40,12 @@ const Profile = () => {
           }
         );
 
-        console.log("📌 Itineraries API Response:", itineraryResponse.data); // 🔍 Log response
+        console.log(" Itineraries API Response:", itineraryResponse.data);
         setItineraries(itineraryResponse.data);
         setLoading(false);
       } catch (error) {
         console.error(
-          "❌ Error fetching profile data:",
+          " Error fetching profile data:",
           error.response?.data || error
         );
         setError("Failed to load profile data. Please try again later.");
@@ -66,14 +66,14 @@ const Profile = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // ✅ Update UI without refresh
+
       setPreferences({
         category: "",
         location: "",
         budget: "",
         activities: [],
       });
-      console.log("✅ Preferences updated in UI");
+      console.log("Preferences updated in UI");
     } catch (error) {
       console.error("Error deleting preferences:", error);
     }

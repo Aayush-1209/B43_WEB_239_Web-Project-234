@@ -4,7 +4,6 @@ import { useAuth } from "../context/AuthContext";
 const PrivateRoute = ({ adminOnly = false }) => {
   const { user } = useAuth();
 
-  // Fetch user from localStorage if it's not set (fixes issue on refresh)
   const storedUser = localStorage.getItem("user");
   const currentUser = user || (storedUser ? JSON.parse(storedUser) : null);
 
